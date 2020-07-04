@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+find /mnt/data/Downloads -mindepth 1 -maxdepth 1 -mtime +7 -print0 |xargs -0 rm -rv

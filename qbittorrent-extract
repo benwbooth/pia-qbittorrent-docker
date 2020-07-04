@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# get arguments
+src=$1
+if [[ -z $1 ]]; then
+    echo "Usage: $0 src" >&2
+    exit 1
+fi
+exec > >(logger -s -t "$(basename "$0")") 2>&1
+echo "Running command: $(printf '%q ' "$0" "$@")"
+set -x
+dest=$src
+desttmp=$src
+if [[ ${2-} = movies || ${2-} = tv ]]; then
+  dest=/mnt/data/Downloads/$(basename "$src")
+elif [[ ${2-} = sports ]]; then
+  dest=/mnt/data/Sports
+else
+  echo "Did not recognize category ${2-}; ignoring" >&2
+  exit 0
+fi
+if [[ $dest != $src ]]; then
+  desttmp=$dest.tmp$$
+  cp -rv "${src%/}" "$desttmp"
+fi
+if [[ -d $desttmp ]]; then
+    cd "$desttmp"
+    find . -type f | perl -nle '/\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print' | xargs -trd \\n atool -x
+else
+    cd "$(dirname "$desttmp")"
+    find "$(basename "$desttmp")" -type f | perl -nle '/\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print' | xargs -trd \\n atool -x
+fi
+[[ $desttmp != $dest ]] && mv -v "$desttmp" "$dest"
