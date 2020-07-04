@@ -56,9 +56,11 @@ spec:
         stdin: true
         tty: true
         volumeMounts:
+        - mountPath: /mnt/Downloads
+          name: downloads
         - mountPath: /downloads
           name: downloads
-        - mountPath: /data
+        - mountPath: /mnt/data
           name: data
         - mountPath: /config
           name: config

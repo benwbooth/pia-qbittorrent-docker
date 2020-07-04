@@ -57,6 +57,7 @@ RUN apt-get update && \
     apt-get autoclean -qq && \
     rm -rf /*.zip /tmp/* /var/tmp/* /var/lib/apt/lists/*
 
+RUN apt-get -y update && apt-get -y install atool cpio lhasa lzop p7zip unace unrar zip unzip rsync
 
 COPY entrypoint.sh qBittorrent.conf /
 
