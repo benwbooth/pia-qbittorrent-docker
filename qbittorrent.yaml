@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: qbittorrent
+  name: qbittorrent
+  namespace: default
+spec:
+  podManagementPolicy: OrderedReady
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qbittorrent
+  serviceName: qbittorrent
+  template:
+    metadata:
+      labels:
+        app: qbittorrent
+    spec:
+      containers:
+      - command:
+        - /entrypoint.sh
+        env:
+        - name: WEBUI_PORT
+          value: '8080'
+        - name: REGION
+          value: Sweden
+        - name: USER
+          valueFrom:
+            secretKeyRef:
+              name: vpn-login
+              key: USER
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: vpn-login
+              key: PASSWORD
+        image: benwbooth/pia-qbittorrent-docker
+        imagePullPolicy: Always
+        name: qbittorrent
+        ports:
+        - containerPort: 8080
+          hostPort: 8080
+          name: tcp8080
+          protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: 8080
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+        securityContext:
+          capabilities:
+            add:
+            - NET_ADMIN
+        stdin: true
+        tty: true
+        volumeMounts:
+        - mountPath: /downloads
+          name: downloads
+        - mountPath: /data
+          name: data
+        - mountPath: /config
+          name: config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      volumes:
+      - hostPath:
+          path: /mnt/Downloads
+          type: ""
+        name: downloads
+      - hostPath:
+          path: /mnt/data
+          type: ""
+        name: data
+      - hostPath:
+          path: /srv/qBittorrent
+          type: ""
+        name: config
+  updateStrategy:
+    type: RollingUpdate

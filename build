@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eu -o pipefail
+dr=${DOCKER_REGISTRY:-benwbooth}
+img=${DOCKER_IMAGE:-$(basename "$(cd "$(dirname "$0")" && pwd)")}
+docker build -t "$dr/$img" "$@" -- "$(dirname "$0")"
+docker push "$dr/$img"
