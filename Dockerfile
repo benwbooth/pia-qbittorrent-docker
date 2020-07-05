@@ -59,6 +59,8 @@ RUN apt-get update && \
 
 RUN apt-get -y update && apt-get -y install atool cpio lhasa lzop p7zip unace unrar zip unzip rsync
 
+COPY qbittorrent-extract /usr/bin/
+
 COPY entrypoint.sh qBittorrent.conf /
 
 RUN chmod 500 /entrypoint.sh
