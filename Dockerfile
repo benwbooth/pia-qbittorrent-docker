@@ -35,12 +35,12 @@ RUN apk add --no-cache -t .build-deps boost-thread boost-system boost-dev g++ gi
 	mkdir -p cmake-build-dir/release && \
 	cd cmake-build-dir/release && \
 	cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=14 -G "Unix Makefiles" ../.. && \
-	make install && \
+	make -j"$(nproc)" install && \
 	mkdir /tmp/qbittorrent && \
 	curl -sSL https://api.github.com/repos/qbittorrent/qBittorrent/tarball/release-4.2.5 | tar xzC /tmp/qbittorrent && \
 	cd /tmp/qbittorrent/*qbittorrent* && \
 	PKG_CONFIG_PATH=/usr/local/lib64/pkgconfig ./configure --disable-gui && \
-	make install && \
+	make -j"$(nproc)" install && \
 	export LD_LIBRARY_PATH=/usr/local/lib:/usr/local/lib64:${LD_LIBRARY_PATH} && \
 	mkdir /tmp/openvpn && \
 	cd /tmp/openvpn && \
