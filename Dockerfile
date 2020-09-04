@@ -53,12 +53,19 @@ RUN apk add --no-cache -t .build-deps boost-thread boost-system boost-dev g++ gi
 	unzip -q openvpn-strong.zip -d /openvpn/udp-strong && \
 	unzip -q openvpn-tcp.zip -d /openvpn/tcp-normal && \
 	unzip -q openvpn-strong-tcp.zip -d /openvpn/tcp-strong && \
+  mkdir /tmp/atool && \
+  curl -sSL http://savannah.nongnu.org/download/atool/atool-0.39.0.tar.gz |tar xzC /tmp/atool && \
+  cd /tmp/atool/atool* && \
+  ./configure && \
+  make -j"$(nproc)" && \
+  make install && \
+  cd && \
+  rm -rf /tmp/atool && \
 	apk del --purge .build-deps && \
 	cd / && \
 	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* /usr/include/*
 
-
-RUN apt-get -y update && apt-get -y install atool cpio lhasa lzop p7zip unace unrar zip unzip rsync
+RUN apk add --no-cache cpio p7zip unrar zip unzip rsync curl
 
 COPY qbittorrent-extract /usr/bin/
 
