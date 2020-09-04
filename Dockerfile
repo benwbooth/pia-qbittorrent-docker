@@ -65,7 +65,7 @@ RUN apk add --no-cache -t .build-deps boost-thread boost-system boost-dev g++ gi
 	cd / && \
 	rm -rf /tmp/* /var/tmp/* /var/cache/apk/* /var/cache/distfiles/* /usr/include/*
 
-RUN apk add --no-cache cpio p7zip unrar zip unzip rsync curl
+RUN apk add --no-cache cpio p7zip unrar zip unzip rsync curl bash
 
 COPY qbittorrent-extract /usr/bin/
 
