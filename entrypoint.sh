@@ -88,14 +88,13 @@ printf " * Encryption: $ENCRYPTION\n"
 printf " * Protocol: $PROTOCOL\n"
 printf "Local network parameters:\n"
 printf " * Web UI port: $WEBUI_PORT\n"
-printf " * Addning PIA DNS Servers\n"
+printf " * Adding PIA DNS Servers\n"
 cat /dev/null > /etc/resolv.conf
 for name_server in $(echo $DNS_SERVERS | sed "s/,/ /g")
 do
 	echo " * * Adding $name_server to resolv.conf"
 	echo "nameserver $name_server" >> /etc/resolv.conf
 done
-printf "DONE\n"
 
 
 #####################################################
@@ -154,6 +153,10 @@ printf " * Domain: $PIADOMAIN\n"
 printf "[INFO] Detecting IP addresses corresponding to $PIADOMAIN...\n"
 VPNIPS=$(dig $PIADOMAIN +short | grep '^[.0-9]*$')
 exitOnError $?
+if [ "$VPNIPS" = "" ]; then
+  print " Unable to connect to $PIADOMAIN"
+  exit 3
+fi
 for ip in $VPNIPS; do
   printf "   $ip\n";
 done
