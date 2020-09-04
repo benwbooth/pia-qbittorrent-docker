@@ -7,4 +7,4 @@ docker push "$dr/$img"
 read -p 'Enter VPN username: ' vpnuser
 read -s -p 'Enter VPN password: ' vpnpass
 echo
-(echo "$vpnuser"; echo "$vpnpass") |kubectl create secret generic vpn-login --from-file=login.conf=/dev/stdin
+kubectl create secret generic vpn-login --from-literal=USER="$vpnuser" --from-literal=PASSWORD="$vpnpass"
