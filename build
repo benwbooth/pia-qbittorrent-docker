@@ -4,3 +4,7 @@ dr=${DOCKER_REGISTRY:-benwbooth}
 img=${DOCKER_IMAGE:-$(basename "$(cd "$(dirname "$0")" && pwd)")}
 docker build -t "$dr/$img" "$@" -- "$(dirname "$0")"
 docker push "$dr/$img"
+read -p 'Enter VPN username: ' vpnuser
+read -s -p 'Enter VPN password: ' vpnpass
+echo
+(echo "$vpnuser"; echo "$vpnpass") |kubectl create secret generic vpn-login --from-file=login.conf=/dev/stdin
