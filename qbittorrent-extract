@@ -25,9 +25,9 @@ if [[ $dest != $src ]]; then
 fi
 if [[ -d $desttmp ]]; then
     cd "$desttmp"
-    find . -type f | perl -nle '/\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print' | xargs -trd \\n atool -x
+    find . -type f | perl -ne 'chomp; /\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print "$_\0"' | xargs -tr0 atool -x
 else
     cd "$(dirname "$desttmp")"
-    find "$(basename "$desttmp")" -type f | perl -nle '/\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print' | xargs -trd \\n atool -x
+    find "$(basename "$desttmp")" -type f | perl -ne 'chomp; /\.(tar|zip|cpio|deb|rpm|gem|7z|cab|lzh|rar|gz|bz2|lzma|xz|h)$/i && print "$_\0"' | xargs -tr0 atool -x
 fi
 [[ $desttmp != $dest ]] && mv -v "$desttmp" "$dest"
